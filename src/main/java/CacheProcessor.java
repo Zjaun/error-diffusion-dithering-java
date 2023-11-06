@@ -1,8 +1,9 @@
-public class Processor implements Runnable {
+public class CacheProcessor implements Runnable {
+    
     private final int elements;
     private final int process;
 
-    public Processor(int elements, int process) {
+    public CacheProcessor(int elements, int process) {
         this.elements = elements;
         this.process = process;
     }

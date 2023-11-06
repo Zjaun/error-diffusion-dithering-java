@@ -20,7 +20,6 @@ public class Demo implements Runnable {
 
     @Override
     public void run() {
-        double framerate = grabber.getFrameRate();
         Java2DFrameConverter converter = new Java2DFrameConverter();
         CanvasFrame window = new CanvasFrame(windowName);
         switch (mode) {
@@ -28,7 +27,6 @@ public class Demo implements Runnable {
                 while (true) {
                     try {
                         window.showImage(grabber.grab());
-                        Thread.sleep(1000/(long) framerate);
                     } catch (Exception e) {
 
                     }
@@ -37,7 +35,6 @@ public class Demo implements Runnable {
                 while (true) {
                     try {
                         window.showImage(ColorQuantizer.toRGB(converter.convert(grabber.grab())));
-                        Thread.sleep(1000/(long) framerate);
                     } catch (Exception e) {
 
                     }
@@ -45,15 +42,22 @@ public class Demo implements Runnable {
             case 2:
                 while (true) {
                     try {
+                        window.showImage(ColorQuantizer.ditherMultithread(converter.convert(grabber.grab())));
+                    } catch (Exception e) {
+
+                    }
+                }
+            case 3:
+                while (true) {
+                    try {
                         window.showImage(ColorQuantizer.dither(converter.convert(grabber.grab())));
-                        Thread.sleep(1000/(long) framerate);
                     } catch (Exception e) {
 
                     }
                 }
             default:
                 System.out.println("Mode is outside the range! " + mode);
-                return;
+                converter.close();
         }
     }
 

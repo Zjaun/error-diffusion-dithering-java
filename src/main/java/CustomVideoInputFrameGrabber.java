@@ -98,22 +98,22 @@ public class CustomVideoInputFrameGrabber extends FrameGrabber {
             if (settingFormat) {
                 int f = format.equals("NTSC_M")   ? VI_NTSC_M   :
                         format.equals("PAL_B")    ? VI_PAL_B    :
-                                format.equals("PAL_D")    ? VI_PAL_D    :
-                                        format.equals("PAL_G")    ? VI_PAL_G    :
-                                                format.equals("PAL_H")    ? VI_PAL_H    :
-                                                        format.equals("PAL_I")    ? VI_PAL_I    :
-                                                                format.equals("PAL_M")    ? VI_PAL_M    :
-                                                                        format.equals("PAL_N")    ? VI_PAL_N    :
-                                                                                format.equals("PAL_NC")   ? VI_PAL_NC   :
-                                                                                        format.equals("SECAM_B")  ? VI_SECAM_B  :
-                                                                                                format.equals("SECAM_D")  ? VI_SECAM_D  :
-                                                                                                        format.equals("SECAM_G")  ? VI_SECAM_G  :
-                                                                                                                format.equals("SECAM_H")  ? VI_SECAM_H  :
-                                                                                                                        format.equals("SECAM_K")  ? VI_SECAM_K  :
-                                                                                                                                format.equals("SECAM_K1") ? VI_SECAM_K1 :
-                                                                                                                                        format.equals("SECAM_L")  ? VI_SECAM_L  :
-                                                                                                                                                format.equals("NTSC_M_J") ? VI_NTSC_M_J :
-                                                                                                                                                        format.equals("NTSC_433") ? VI_NTSC_433 : -1;
+                        format.equals("PAL_D")    ? VI_PAL_D    :
+                        format.equals("PAL_G")    ? VI_PAL_G    :
+                        format.equals("PAL_H")    ? VI_PAL_H    :
+                        format.equals("PAL_I")    ? VI_PAL_I    :
+                        format.equals("PAL_M")    ? VI_PAL_M    :
+                        format.equals("PAL_N")    ? VI_PAL_N    :
+                        format.equals("PAL_NC")   ? VI_PAL_NC   :
+                        format.equals("SECAM_B")  ? VI_SECAM_B  :
+                        format.equals("SECAM_D")  ? VI_SECAM_D  :
+                        format.equals("SECAM_G")  ? VI_SECAM_G  :
+                        format.equals("SECAM_H")  ? VI_SECAM_H  :
+                        format.equals("SECAM_K")  ? VI_SECAM_K  :
+                        format.equals("SECAM_K1") ? VI_SECAM_K1 :
+                        format.equals("SECAM_L")  ? VI_SECAM_L  :
+                        format.equals("NTSC_M_J") ? VI_NTSC_M_J :
+                        format.equals("NTSC_433") ? VI_NTSC_433 : -1;
                 myVideoInput.setFormat(deviceNumber, f);
                 if (f >= 0 && !myVideoInput.setFormat(deviceNumber, f)) {
                     throw new Exception("videoInput.setFormat() Error: Could not set format " + format + ".");
@@ -121,23 +121,23 @@ public class CustomVideoInputFrameGrabber extends FrameGrabber {
             } else if (settingSubType) {
                 int s = format.equals("RGB24")  ? VI_MEDIASUBTYPE_RGB24  :
                         format.equals("RGB32")  ? VI_MEDIASUBTYPE_RGB32  :
-                                format.equals("RGB555") ? VI_MEDIASUBTYPE_RGB555 :
-                                        format.equals("YUY2")   ? VI_MEDIASUBTYPE_YUY2   :
-                                                format.equals("YVYU")   ? VI_MEDIASUBTYPE_YVYU   :
-                                                        format.equals("YUYV")   ? VI_MEDIASUBTYPE_YUYV   :
-                                                                format.equals("IYUV")   ? VI_MEDIASUBTYPE_IYUV   :
-                                                                        format.equals("UYVY")   ? VI_MEDIASUBTYPE_UYVY   :
-                                                                                format.equals("YV12")   ? VI_MEDIASUBTYPE_YV12   :
-                                                                                        format.equals("YVU9")   ? VI_MEDIASUBTYPE_YVU9   :
-                                                                                                format.equals("Y411")   ? VI_MEDIASUBTYPE_Y411   :
-                                                                                                        format.equals("Y41P")   ? VI_MEDIASUBTYPE_Y41P   :
-                                                                                                                format.equals("Y211")   ? VI_MEDIASUBTYPE_Y211   :
-                                                                                                                        format.equals("AYUV")   ? VI_MEDIASUBTYPE_AYUV   :
-                                                                                                                                format.equals("Y800")   ? VI_MEDIASUBTYPE_Y800   :
-                                                                                                                                        format.equals("Y8")     ? VI_MEDIASUBTYPE_Y8     :
-                                                                                                                                                format.equals("GREY")   ? VI_MEDIASUBTYPE_GREY   :
-                                                                                                                                                        format.equals("MJPG")   ? VI_MEDIASUBTYPE_MJPG   :
-                                                                                                                                                                format.equals("H264")   ? 19                     : -1;
+                        format.equals("RGB555") ? VI_MEDIASUBTYPE_RGB555 :
+                        format.equals("YUY2")   ? VI_MEDIASUBTYPE_YUY2   :
+                        format.equals("YVYU")   ? VI_MEDIASUBTYPE_YVYU   :
+                        format.equals("YUYV")   ? VI_MEDIASUBTYPE_YUYV   :
+                        format.equals("IYUV")   ? VI_MEDIASUBTYPE_IYUV   :
+                        format.equals("UYVY")   ? VI_MEDIASUBTYPE_UYVY   :
+                        format.equals("YV12")   ? VI_MEDIASUBTYPE_YV12   :
+                        format.equals("YVU9")   ? VI_MEDIASUBTYPE_YVU9   :
+                        format.equals("Y411")   ? VI_MEDIASUBTYPE_Y411   :
+                        format.equals("Y41P")   ? VI_MEDIASUBTYPE_Y41P   :
+                        format.equals("Y211")   ? VI_MEDIASUBTYPE_Y211   :
+                        format.equals("AYUV")   ? VI_MEDIASUBTYPE_AYUV   :
+                        format.equals("Y800")   ? VI_MEDIASUBTYPE_Y800   :
+                        format.equals("Y8")     ? VI_MEDIASUBTYPE_Y8     :
+                        format.equals("GREY")   ? VI_MEDIASUBTYPE_GREY   :
+                        format.equals("MJPG")   ? VI_MEDIASUBTYPE_MJPG   :
+                        format.equals("H264")   ? 19                     : -1;
                 myVideoInput.setRequestedMediaSubType(s);
             }
         }

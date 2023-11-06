@@ -1,11 +1,17 @@
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.VideoInputFrameGrabber;
 
 //import javax.imageio.ImageIO;
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 //import java.io.File;
 //import java.util.Arrays;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class ColorQuantizer {
@@ -14,7 +20,8 @@ public class ColorQuantizer {
     public static int[] elements;
 
     static void computeValues(boolean isMultiThreaded, Optional<Integer> coreCount) throws Exception {
-        int threadNumber = isMultiThreaded && coreCount.isPresent() && coreCount.get() > 0 ? coreCount.get() : isMultiThreaded ? (int) Math.floor(Runtime.getRuntime().availableProcessors() * 0.75) : 1;
+        int threadNumber = isMultiThreaded && coreCount.isPresent() && coreCount.get() > 0 ?
+                coreCount.get() : isMultiThreaded ? (int) Math.floor(Runtime.getRuntime().availableProcessors() * 0.75) : 1;
         elements = new int[threadNumber];
         Thread[] threads = new Thread[threadNumber];
         if (16777216 % threadNumber != 0) {
@@ -22,7 +29,7 @@ public class ColorQuantizer {
         }
         for (int i = 0; i < threadNumber; i++) {
             elements[i] += (int) Math.floor(16777216.0 / threadNumber);
-            Processor processor = new Processor(elements[i], i);
+            CacheProcessor processor = new CacheProcessor(elements[i], i);
             threads[i] = new Thread(processor);
             threads[i].start();
         }
@@ -82,24 +89,60 @@ public class ColorQuantizer {
         image.setRGB(x, y, newColor);
     }
 
-    public static void main(String[] args) throws Exception {
+    static BufferedImage ditherMultithread(BufferedImage image) throws Exception {
+        int threadCount = 4; // fixed for now, only accept images that are divisible by threadCount
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
+        int i = 0;
+        BufferedImage newImage = new BufferedImage(imageWidth, imageHeight, image.getType());
+        Graphics2D g2d = newImage.createGraphics();
+        Thread[] threads = new Thread[threadCount];
+        for (int height = 0; height < imageHeight; height += (imageHeight / threadCount)) {
+            DitherProcessor processor = new DitherProcessor(image, g2d, imageWidth, imageHeight, height, threadCount);
+            threads[i] = new Thread(processor);
+            threads[i].start();
+            i++;
+        }
+        for (Thread thread : threads) {
+            thread.join();
+        }
+        g2d.dispose();
+        return newImage;
+    }
+
+    static void demo() throws Exception {
         computeValues(true, Optional.empty());
         Java2DFrameConverter converter = new Java2DFrameConverter();
         FrameGrabber grabber = new CustomVideoInputFrameGrabber(0);
         grabber.setFormat("MJPG");
-        grabber.setImageWidth(1280);
-        grabber.setImageHeight(720);
+        grabber.setImageWidth(640);
+        grabber.setImageHeight(480);
         grabber.setFrameRate(30.0);
         grabber.start();
         Demo webcam = new Demo("Webcam", 0, grabber);
         Demo directRGB = new Demo("Direct Palette Conversion (1 Thread)", 1, grabber);
-        Demo directDither = new Demo("Dithered-FSD (1 Thread)", 2, grabber);
+        Demo directDitherMulti = new Demo("Dithered-FSD (4 Threads)", 2, grabber);
+        Demo directDither = new Demo("Dithered-FSD (1 Thread)", 6, grabber);
         Thread webcamThread = new Thread(webcam);
         Thread directRGBThread = new Thread(directRGB);
         Thread directDitherThread = new Thread(directDither);
-//        webcamThread.start();
+        Thread directDitherMultiThread =  new Thread(directDitherMulti);
+        webcamThread.start();
 //        directRGBThread.start();
         directDitherThread.start();
+//        directDitherMultiThread.start();
     }
 
+    static HashMap<Integer, ArrayList<Integer>> computeRows(int threadCount, int imageWidth, int imageHeight) {
+        HashMap<Integer, ArrayList<Integer>> threadRows = new HashMap<>();
+        for (int i = 0; i < imageHeight; i++) {
+            int threadNumber = (i % threadCount) + 1;
+            threadRows.computeIfAbsent(threadNumber, k -> new ArrayList<>()).add(i);
+        }
+        return threadRows;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+    }
 }
