@@ -66,7 +66,7 @@ Traditionally, the Floyd-Steinberg algorithm works like this:
          for (int y = 0; y < height; y++) {
            for (int x = 0; x < width; x++) {
              int currentColor = new Color(image.getRGB(x, y)).getRGB();
-             int nearestColor = colors[(currentColor * -1) - 1];
+             int nearestColor = findNearestColor(currentColor);
              newImage.setRGB(x, y, nearestColor);
              int quantErrorR = ((currentColor >> 16) & 0xFF) - ((nearestColor >> 16) & 0xFF);
              int quantErrorG = ((currentColor >> 8) & 0xFF) - ((nearestColor >> 8) & 0xFF);
