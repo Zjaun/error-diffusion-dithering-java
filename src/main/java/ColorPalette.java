@@ -1,275 +1,195 @@
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.IndexColorModel;
-import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.imageio.ImageIO;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ColorPalette {
 
-    static final int[] baseColors = new int[]{
-            -10912473,
-            -9594576,
-            -8408520,
-            -12362211,
-            -5331853,
-            -2766452,
-            -530013,
-            -8225962,
-            -7566196,
-            -5526613,
-            -3684409,
-            -9868951,
-            -4980736,
-            -2359296,
-            -65536,
-            -7929856,
-            -9408332,
-            -7697700,
-            -6250241,
-            -11250553,
-            -9079435,
-            -7303024,
-            -5789785,
-            -10987432,
-            -16754944,
-            -16750080,
-            -16745472,
-            -16760576,
-            -4934476,
-            -2302756,
-            -1,
-            -7895161,
-            -9210239,
-            -7499618,
-            -5986120,
-            -11118495,
-            -9810890,
-            -8233406,
-            -6853299,
-            -11585240,
-            -11579569,
-            -10461088,
-            -9408400,
-            -12895429,
-            -13816396,
-            -13158436,
-            -12566273,
-            -14605945,
-            -10202062,
-            -8690114,
-            -7375032,
-            -11845850,
-            -4935252,
-            -2303533,
-            -779,
-            -7895679,
-            -6792924,
-            -4559572,
-            -2588877,
-            -9288933,
-            -8571496,
-            -6733382,
-            -5092136,
-            -10606478,
-            -12030824,
-            -10976070,
-            -10053160,
-            -13217422,
-            -6184668,
-            -3816148,
-            -1710797,
-            -8816357,
-            -10907631,
-            -9588715,
-            -8401895,
-            -12358643,
-            -5613196,
-            -3117682,
-            -884827,
-            -8371369,
-            -13290187,
-            -12500671,
-            -11776948,
-            -14145496,
-            -9671572,
-            -8092540,
-            -6710887,
-            -11447983,
-            -13280916,
-            -12489340,
-            -11763815,
-            -14138543,
-            -10933123,
-            -9619815,
-            -8437838,
-            -12377762,
-            -14404227,
-            -13876839,
-            -13415246,
-            -14997410,
-            -12045020,
-            -10993364,
-            -10073037,
-            -13228005,
-            -12035804,
-            -10982100,
-            -10059981,
-            -13221093,
-            -9690076,
-            -8115156,
-            -6737101,
-            -11461861,
-            -15658735,
-            -15395563,
-            -15132391,
-            -15921907,
-            -5199818,
-            -2634430,
-            -332211,
-            -8094168,
-            -12543338,
-            -11551561,
-            -10691627,
-            -13601936,
-            -13346124,
-            -12620068,
-            -11894529,
-            -14204025,
-            -16738008,
-            -16729294,
-            -16721606,
-            -16748002,
-            -10798046,
-            -9483734,
-            -8301007,
-            -12309223,
-            -11599616,
-            -10485504,
-            -9436672,
-            -12910336,
-            -7111567,
-            -4941686,
-            -3034719,
-            -9544363,
-            -9422567,
-            -7780833,
-            -6335964,
-            -11261165,
-            -9880244,
-            -8369315,
-            -6989972,
-            -11653575,
-            -11580319,
-            -10461833,
-            -9409398,
-            -12895927,
-            -8168167,
-            -6262241,
-            -4553436,
-            -10336749,
-            -12037595,
-            -10984403,
-            -9997003,
-            -13222628,
-            -9423305,
-            -7716285,
-            -6271666,
-            -11261911,
-            -14148584,
-            -13556962,
-            -13031133,
-            -14805742,
-            -10532027,
-            -9151404,
-            -7902366,
-            -12109773,
-            -12763072,
-            -11841713,
-            -11051940,
-            -13750224,
-            -11128002,
-            -9879989,
-            -8763048,
-            -12573138,
-            -13292736,
-            -12503729,
-            -11780516,
-            -14147536,
-            -13289187,
-            -12499420,
-            -11775446,
-            -14144746,
-            -10212832,
-            -8768729,
-            -7455698,
-            -11854056,
-            -15069429,
-            -14740979,
-            -14346736,
-            -15529208,
-            -8052446,
-            -6084310,
-            -4378575,
-            -10217191,
-            -9950140,
-            -8440237,
-            -7061663,
-            -11656909,
-            -12578540,
-            -11594471,
-            -10741475,
-            -13628145,
-            -15771554,
-            -15569805,
-            -15303034,
-            -16039354,
-            -14130078,
-            -13469064,
-            -12939636,
-            -14791862,
-            -12837077,
-            -11918027,
-            -11129794,
-            -13822176,
-            -15827107,
-            -15623310,
-            -15420283,
-            -16097466,
-            -12171706,
-            -11119018,
-            -10197916,
-            -13355980,
-            -6784153,
-            -4548994,
-            -2576493,
-            -9282483,
-            -10914455,
-            -9596799,
-            -8411242,
-            -12363697
-    };
+    private final ArrayList<Integer> palette = new ArrayList<>();
+    private double[] paletteCIEL = null;
+    private double[] paletteCIEu = null;
+    private double[] paletteCIEv = null;
 
-    static int findNearestColor(int rgb) {
-        double minDistance = Double.MAX_VALUE;
+    public ColorPalette(Color[] colors) {
+        if (colors == null) {
+            throw new IllegalArgumentException("Color array is null.");
+        }
+        for (Color color : colors) {
+            addColor(color);
+        }
+    }
+
+    public ColorPalette(Color color) {
+        addColor(color);
+    }
+
+    public ColorPalette(int[] colors) {
+        if (colors == null) {
+            throw new IllegalArgumentException("Color array is null.");
+        }
+        for (int color : colors) {
+            addColor(color);
+        }
+    }
+
+    public ColorPalette(int color) {
+        addColor(color);
+    }
+
+    public void addColor(Color color) {
+        if (color == null) {
+            throw new IllegalArgumentException("Color is null.");
+        }
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        palette.add((255 << 24) + (r << 16) + (g << 8) + b);
+    }
+
+    public void addColor(int color) {
+        if (withinRGBRange(color)) {
+            palette.add(color);
+        } else {
+            throw new IllegalArgumentException("Color outside of sRGB range.");
+        }
+    }
+
+    public void addColor(byte r, byte g, byte b) {
+        palette.add((255 << 24) + (r << 16) + (g << 8) + b);
+    }
+
+    public void removeColor(Color color) {
+        if (color == null) {
+            throw new IllegalArgumentException("Color is null.");
+        }
+        int intRepresentation = color.getRGB();
+        if (palette.contains(intRepresentation)) {
+            palette.remove(intRepresentation);
+        } else {
+            throw new IllegalArgumentException(String.format("Color %d is not in the palette.", intRepresentation));
+        }
+    }
+
+    public void removeColor(int color) {
+        if (palette.contains(color)) {
+            palette.remove(color);
+        } else {
+            throw new IllegalArgumentException(String.format("Color %d is not in the palette.", color));
+        }
+    }
+
+    public int getNumOfColors() {
+        return palette.size();
+    }
+
+    public int[] createLUT() {
+        LUT lut =  new LUT(this);
+        lut.createLUT();
+        return lut.getLUT();
+    }
+
+    public int[] createLUT(boolean multiThreadded) {
+        LUT lut =  new LUT(this);
+        if (multiThreadded) {
+            lut.enableMultiThreading();
+            lut.createLUT();
+        } else {
+            lut.createLUT();
+        }
+        return lut.getLUT();
+    }
+
+    public int[] createLUT(int threadCount) {
+        LUT lut =  new LUT(this);
+        lut.enableMultiThreading();
+        lut.setThreadCount(threadCount);
+        lut.createLUT();
+        return lut.getLUT();
+    }
+
+    public int findNearestColorRGB(int rgb) {
+        int pixelRed = (rgb >> 16) & 0xFF;
+        int pixelGreen = (rgb >> 8) & 0xFF;
+        int pixelBlue = rgb & 0xFF;
+        int nearestColor = 0;
+        int minDistance = Integer.MAX_VALUE;
+        for (int color : palette) {
+            int baseColorRed = (color >> 16) & 0xFF;
+            int baseColorGreen = (color >> 8) & 0xFF;
+            int baseColorBlue = color & 0xFF;
+            int distance = ((pixelRed - baseColorRed) * (pixelRed - baseColorRed)) +
+                    ((pixelGreen - baseColorGreen) * (pixelGreen - baseColorGreen)) +
+                    ((pixelBlue - baseColorBlue) * (pixelBlue - baseColorBlue));
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestColor = color;
+            }
+        }
+        return nearestColor;
+    }
+
+    public int findNearestColorCIELab(int rgb) {
+        if (paletteCIEL == null || paletteCIEu == null || paletteCIEv == null) {
+            throw new IllegalStateException("Call convertPaletteToCIELuv() first.");
+        }
+        int pixelRed = (rgb >> 16) & 0xFF;
+        int pixelGreen = (rgb >> 8) & 0xFF;
+        int pixelBlue = rgb & 0xFF;
         int index = 0;
-        for (int i = 0; i < baseColors.length; i++) {
-            double distance = Math.sqrt(
-                    Math.pow(((rgb >> 16) & 0xFF) - ((baseColors[i] >> 16) & 0xFF), 2.0) +
-                            Math.pow(((rgb >> 8) & 0xFF) - ((baseColors[i] >> 8) & 0xFF), 2.0) +
-                            Math.pow((rgb & 0xFF) - (baseColors[i] & 0xFF), 2.0)
-            );
+        double[] coordinates = rgbToCIELuv(pixelRed, pixelGreen, pixelBlue);
+        double minDistance = Double.MAX_VALUE;
+        for (int i = 0; i < palette.size(); i++) {
+            double distance = ((coordinates[0] - paletteCIEL[i]) * (coordinates[0] - paletteCIEL[i])) +
+                    ((coordinates[1] - paletteCIEu[i]) * (coordinates[1] - paletteCIEu[i])) +
+                    ((coordinates[2] - paletteCIEv[i]) * (coordinates[2] - paletteCIEv[i]));
             if (distance < minDistance) {
                 minDistance = distance;
                 index = i;
             }
         }
-        return baseColors[index];
+        return palette.get(index);
+    }
+    public void convertPaletteToCIELab() {
+        int paletteSize = palette.size();
+        paletteCIEL = new double[paletteSize];
+        paletteCIEu = new double[paletteSize];
+        paletteCIEv = new double[paletteSize];
+        int index = 0;
+        for (int color: palette) {
+            int baseColorRed = (color >> 16) & 0xFF;
+            int baseColorGreen = (color >> 8) & 0xFF;
+            int baseColorBlue = color & 0xFF;
+            double[] coordinates = rgbToCIELuv(baseColorRed, baseColorGreen, baseColorBlue);
+            paletteCIEL[index] = coordinates[0];
+            paletteCIEu[index] = coordinates[1];
+            paletteCIEv[index] = coordinates[2];
+            index++;
+        }
+    }
+
+    private double[] rgbToCIELuv(int r, int g, int b) {
+
+        // http://www.brucelindbloom.com/index.html?Eqn_RGB_to_XYZ.html
+
+        double rN = r / 255.0;
+        double gN = g / 255.0;
+        double bN = b / 255.0;
+
+        rN = rN <= 0.04045 ? rN / 12.92 : Math.pow((rN + 0.055) / 1.055, 2.4);
+        gN = gN <= 0.04045 ? gN / 12.92 : Math.pow((gN + 0.055) / 1.055, 2.4);
+        bN = bN <= 0.04045 ? bN / 12.92 : Math.pow((bN + 0.055) / 1.055, 2.4);
+
+        double xN = rN * 0.4124564 + gN * 0.3575761 + bN * 0.1804375;
+        double yN = rN * 0.2126729 + gN * 0.7151522 + bN * 0.0721750;
+        double zN = rN * 0.0193339 + gN * 0.1191920 + bN * 0.9503041;
+
+        return new double[3];
+
+    }
+
+    private boolean withinRGBRange(int number) {
+        return number <= -1 && number >= -16777216;
     }
 
 }
