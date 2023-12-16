@@ -14,7 +14,7 @@ public class LUT {
         this.PALETTE = palette;
     }
 
-    public void createLUT() {
+    public void createLUT(boolean isCIELab) {
         if (multiThread) {
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
             int elementsPerThread = POSSIBLE_COLORS / threadCount;
@@ -28,7 +28,7 @@ public class LUT {
                 int finalEndElement = endElement;
                 executorService.submit(() -> {
                     for (int k = startElement; k < finalEndElement + 1; k++) {
-                        colors[k] = PALETTE.findNearestColorRGB((k + 1) * -1);
+                        colors[k] = isCIELab ? PALETTE.findNearestColorCIELab((k + 1) * -1) : PALETTE.findNearestColorRGB((k + 1) * -1);
                     }
                 });
             }
@@ -38,7 +38,7 @@ public class LUT {
             }
         } else {
             for (int i = 0; i < colors.length; i++) {
-                colors[i] = PALETTE.findNearestColorRGB((i + 1) * -1);
+                colors[i] = isCIELab ? PALETTE.findNearestColorCIELab((i + 1) * -1) : PALETTE.findNearestColorRGB((i + 1) * -1);
             }
         }
         lutCreated = true;

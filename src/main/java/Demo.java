@@ -1,10 +1,15 @@
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacv.Frame;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Demo {
 
@@ -28,26 +33,41 @@ public class Demo {
 //              new Color(255, 255, 255),
 //      });
        ColorPalette palette = new ColorPalette(MinecraftMapColor.baseColors);
+       palette.convertPaletteToCIELab();
        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber("desktop");
        grabber.setFormat("gdigrab");
 //       VideoInputFrameGrabber grabber = new VideoInputFrameGrabber(4);
 //       grabber.setVideoCodec(18);
-       final int width = 1280;
-       final int height = 720;
-       grabber.setImageWidth(width);
-       grabber.setImageHeight(height);
+       grabber.setImageWidth(1280);
+       grabber.setImageHeight(720);
+       final int WIDTH = 1280;
+       final int HEIGHT = 720;
        grabber.start();
-       byte[] bytes = new byte[(height * width) * 3];
+       byte[] bytes = new byte[(WIDTH * HEIGHT) * 3];
+       BufferedImage resized = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+       Graphics2D g2d = resized.createGraphics();
        ExecutorService executorService = Executors.newFixedThreadPool(2);
-       FloydSteinberg quantizer = new FloydSteinberg(width, height, palette.createLUT(true));
+//       FloydSteinberg fsd = new FloydSteinberg(WIDTH, HEIGHT, palette.createLUT(true, false));
+       Atkinson atk = new Atkinson(WIDTH, HEIGHT, palette.createLUT(true, false));
+//       MinimizedAverageError jjn = new MinimizedAverageError(WIDTH, HEIGHT, palette.createLUT(true, false));
+//       Stucki stk = new Stucki(WIDTH, HEIGHT, palette.createLUT(true, false));
+//       Burkes brk = new Burkes(WIDTH, HEIGHT, palette.createLUT(true, false));
+//       SierraLite sieLite = new SierraLite(WIDTH, HEIGHT, palette.createLUT(true, false));
        CanvasFrame window = new CanvasFrame("Floyd-Steinberg Dithering (" + palette.getNumOfColors() + " Colors)");
+       Java2DFrameConverter converter = new Java2DFrameConverter();
        executorService.submit(() -> {
            while (true) {
+//               BufferedImage image = converter.convert(grabber.grab());
+//               g2d.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
                Frame frame = grabber.grab();
                Buffer[] buffer = frame.image;
                ByteBuffer byteBuffer = (ByteBuffer) buffer[0];
                byteBuffer.get(bytes);
-               window.showImage(quantizer.toRGB(bytes));
+               long start = System.currentTimeMillis();
+//               window.showImage(fsd.dither(image.getRGB(0, 0, WIDTH, HEIGHT, null, 0, WIDTH)));
+               window.showImage(atk.dither(bytes));
+               long end = System.currentTimeMillis();
+               printRenderTime(start, end);
                byteBuffer.rewind();
            }
        });
@@ -57,6 +77,10 @@ public class Demo {
 //               window1.showImage(grabber.grab());
 //           }
 //       });
+   }
+
+   private static void printRenderTime(long start, long end) {
+       System.out.println("Render time: " + (end - start) + "ms | FPS: " + ((int) (1000 / (end - start))));
    }
 
 }
