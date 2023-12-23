@@ -30,9 +30,7 @@ public class Stucki implements ImageDither {
     public BufferedImage dither(int[] raster) {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
-
                 int[] quantizedErrors = findAndSetNearestColors(raster, y, WIDTH, x, LUT, PALETTE, CANVAS);
-
                 if (x < WIDTH - 1) {
                     distributeError(raster, WIDTH, x + 1, y, quantizedErrors[0], quantizedErrors[1], quantizedErrors[2], 8.0 / 42.0);
                     if (x < WIDTH - 2) {
@@ -121,6 +119,11 @@ public class Stucki implements ImageDither {
         }
         IMAGE.setRGB(0, 0, WIDTH, HEIGHT, CANVAS, 0, WIDTH);
         return IMAGE;
+    }
+
+    public BufferedImage dither(BufferedImage image) {
+        int[] imageArray = image.getRGB(0, 0, WIDTH, HEIGHT, null, 0, WIDTH);
+        return dither(imageArray);
     }
 
 }

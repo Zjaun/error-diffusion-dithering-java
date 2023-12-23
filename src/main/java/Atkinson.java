@@ -31,11 +31,11 @@ public class Atkinson implements ImageDither {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 int[] quantizedErrors = findAndSetNearestColors(raster, y, WIDTH, x, LUT, PALETTE, CANVAS);
-                if (x < WIDTH - 2) {
-                    distributeError(raster, WIDTH, x + 2, y, quantizedErrors[0], quantizedErrors[1], quantizedErrors[2], 1.0 / 8.0);
-                }
                 if (x < WIDTH - 1) {
                     distributeError(raster, WIDTH, x + 1, y, quantizedErrors[0], quantizedErrors[1], quantizedErrors[2], 1.0 / 8.0);
+                    if (x < WIDTH - 2) {
+                        distributeError(raster, WIDTH, x + 2, y, quantizedErrors[0], quantizedErrors[1], quantizedErrors[2], 1.0 / 8.0);
+                    }
                 }
                 if (y < HEIGHT - 1) {
                     if (x > 0) {
@@ -45,9 +45,9 @@ public class Atkinson implements ImageDither {
                     if (x < WIDTH - 1) {
                         distributeError(raster, WIDTH, x + 1, y + 1, quantizedErrors[0], quantizedErrors[1], quantizedErrors[2], 1.0 / 8.0);
                     }
-                }
-                if (y < HEIGHT - 2) {
-                    distributeError(raster, WIDTH, x, y + 2, quantizedErrors[0], quantizedErrors[1], quantizedErrors[2], 1.0 / 8.0);
+                    if (y < HEIGHT - 2) {
+                        distributeError(raster, WIDTH, x, y + 2, quantizedErrors[0], quantizedErrors[1], quantizedErrors[2], 1.0 / 8.0);
+                    }
                 }
             }
         }
@@ -83,6 +83,11 @@ public class Atkinson implements ImageDither {
         }
         IMAGE.setRGB(0, 0, WIDTH, HEIGHT, CANVAS, 0, WIDTH);
         return IMAGE;
+    }
+
+    public BufferedImage dither(BufferedImage image) {
+        int[] imageArray = image.getRGB(0, 0, WIDTH, HEIGHT, null, 0, WIDTH);
+        return dither(imageArray);
     }
 
 }

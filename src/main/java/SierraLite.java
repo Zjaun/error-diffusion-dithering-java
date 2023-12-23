@@ -67,4 +67,9 @@ public class SierraLite implements ImageDither {
         return IMAGE;
     }
 
+    public BufferedImage dither(BufferedImage image) {
+        int[] imageArray = image.getRGB(0, 0, WIDTH, HEIGHT, null, 0, WIDTH);
+        return dither(imageArray);
+    }
+
 }

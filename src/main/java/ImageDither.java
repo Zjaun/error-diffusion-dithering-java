@@ -4,6 +4,7 @@ public interface ImageDither {
 
     BufferedImage dither(int[] raster);
     BufferedImage dither(byte[] raster);
+    BufferedImage dither(BufferedImage image);
 
     default void distributeError(
             int[] raster,

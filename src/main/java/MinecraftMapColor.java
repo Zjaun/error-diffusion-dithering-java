@@ -247,7 +247,4 @@ public class MinecraftMapColor {
             -12363697
     };
 
-
-
-
 }
